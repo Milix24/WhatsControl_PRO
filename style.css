@@ -1,0 +1,90 @@
+body { 
+    font-family: 'Segoe UI', sans-serif; 
+    background-color: #f8fafc; 
+    display: flex; justify-content: center; padding: 20px; margin: 0; min-height: 100vh;
+}
+
+.app-container { 
+    background: #ffffff; width: 100%; max-width: 460px; padding: 30px; 
+    border-radius: 28px; box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+}
+
+/* CAMBIO SOLICITADO: Verde oscuro de la versión Lite */
+header .logo { 
+    color: #005e54; 
+    font-size: 26px; 
+    font-weight: 800; 
+    text-align: center; 
+}
+
+header p { 
+    color: #005e54; 
+    font-size: 11px; 
+    text-align: center; 
+    margin-bottom: 25px; 
+    font-weight: 700; 
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+    opacity: 0.8;
+}
+
+/* El resto se mantiene igual */
+.dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
+.stat-card { padding: 18px; border-radius: 20px; text-align: center; border: 1px solid rgba(0,0,0,0.02); }
+.stat-value { font-size: 24px; font-weight: 800; display: block; }
+.stat-label { font-size: 11px; font-weight: 700; opacity: 0.8; }
+
+.blue { background: #e0f2fe; color: #0369a1; }
+.orange { background: #ffedd5; color: #c2410c; }
+.purple { background: #f3e8ff; color: #7e22ce; }
+.green { background: #dcfce7; color: #15803d; }
+
+.form-section { display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; }
+input, select { padding: 14px; border: 1.5px solid #f1f5f9; border-radius: 14px; font-size: 14px; transition: 0.3s; background: #f8fafc; }
+input:focus { border-color: #0369a1; background: #fff; outline: none; }
+
+#mainBtn { 
+    background: #0369a1; color: white; border: none; padding: 16px; 
+    border-radius: 14px; font-weight: 700; cursor: pointer; transition: 0.3s;
+}
+#mainBtn:hover { background: #075985; transform: translateY(-2px); }
+
+.list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.list-header h2 { font-size: 17px; color: #1e293b; }
+#filterStatus { padding: 6px; font-size: 11px; border-radius: 10px; border-color: #f1f5f9; }
+
+.search-container { margin-bottom: 20px; }
+#searchInput { width: 100%; box-sizing: border-box; }
+
+.client-card { 
+    background: #fff; padding: 18px; border-radius: 20px; 
+    margin-bottom: 12px; display: flex; justify-content: space-between; 
+    align-items: center; border: 1px solid #f1f5f9; transition: 0.3s;
+}
+
+.name-wrapper { display: flex; align-items: center; gap: 10px; }
+.status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+.client-info strong { font-size: 15px; color: #1e293b; }
+.client-info span { font-size: 11px; color: #64748b; display: block; margin-top: 2px; }
+
+.actions { display: flex; gap: 8px; }
+.btn-action { 
+    border: none; width: 38px; height: 38px; border-radius: 12px; 
+    cursor: pointer; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    display: flex; align-items: center; justify-content: center;
+}
+.btn-action:hover { transform: scale(1.15) translateY(-3px); }
+
+.btn-ws { background: #25d366; color: white; }
+.btn-edit { background: #f1f5f9; color: #475569; }
+.btn-delete { background: #fef2f2; color: #ef4444; }
+
+.admin-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 25px; }
+.btn-admin { padding: 14px; border-radius: 14px; border: none; font-weight: 700; cursor: pointer; font-size: 12px; transition: 0.3s; }
+.excel { background: #15803d; color: white; }
+.clear { background: #fff; color: #ef4444; border: 1.5px solid #ef4444; }
+
+footer { text-align: center; margin-top: 30px; color: #cbd5e1; font-size: 10px; font-weight: 600; }
+
+
