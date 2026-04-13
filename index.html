@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsControl PRO - Business Edition 💎</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="certified-seal">
+            <svg viewBox="0 0 100 100" class="seal-svg">
+                <path id="sealPath" d="M 50, 50 m -40, 0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0" fill="transparent"/>
+                <text class="seal-text">
+                    <textPath href="#sealPath">WHATSCONTROL • ORIGINAL SYSTEM •</textPath>
+                </text>
+            </svg>
+            <div class="inner-check">✓</div>
+        </div>
+
+        <header>
+            <div class="logo">WhatsControl PRO 💎</div>
+            <p>Tu asistente de ventas de alto rendimiento</p>
+        </header>
+
+        <section class="dashboard">
+            <div class="stat-card blue">
+                <span class="stat-value" id="countNuevo">0</span>
+                <span class="stat-label">Nuevos</span>
+            </div>
+            <div class="stat-card orange">
+                <span class="stat-value" id="countInteresado">0</span>
+                <span class="stat-label">Interesados</span>
+            </div>
+            <div class="stat-card purple">
+                <span class="stat-value" id="countPendiente">0</span>
+                <span class="stat-label">Pendientes</span>
+            </div>
+            <div class="stat-card green">
+                <span class="stat-value" id="countVenta">0</span>
+                <span class="stat-label">Ventas</span>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <input type="text" id="clientName" placeholder="Nombre del cliente">
+            <input type="text" id="clientPhone" placeholder="WhatsApp (Ej: 56912345678)">
+            <select id="status">
+                <option value="Nuevo">📩 Nuevo Prospecto</option>
+                <option value="Interesado">🔥 Interesado</option>
+                <option value="Pendiente">⏳ Seguimiento Pendiente</option>
+                <option value="Venta Cerrada">✅ Venta Cerrada</option>
+            </select>
+            <button id="mainBtn" onclick="addClient()">Guardar en Cartera</button>
+        </section>
+
+        <section class="list-section">
+            <div class="list-header">
+                <h2>Mis Contactos</h2>
+                <select id="filterStatus" onchange="render()">
+                    <option value="Todos">Ver Todos</option>
+                    <option value="Nuevo">Nuevos</option>
+                    <option value="Interesado">Interesados</option>
+                    <option value="Pendiente">Pendientes</option>
+                    <option value="Venta Cerrada">Ventas</option>
+                </select>
+            </div>
+
+            <div class="search-container">
+                <input type="text" id="searchInput" onkeyup="render()" placeholder="🔍 Buscar por nombre...">
+            </div>
+
+            <div id="clientList"></div>
+
+            <div class="admin-actions">
+                <button onclick="exportToExcel()" class="btn-admin excel"><i class="fas fa-file-export"></i> Exportar Reporte</button>
+                <button onclick="clearCycle()" class="btn-admin clear"><i class="fas fa-undo"></i> Reiniciar Ciclo</button>
+            </div>
+        </section>
+
+        <footer>
+            <p>Desarrollado por WhatsControl © 2026</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
