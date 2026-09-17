@@ -179,6 +179,41 @@
         <input type="file" id="backupFile" accept=".json" style="display:none">
 
 
+
+                </section>
+
+        <!-- IMPORTAR CLIENTES -->
+        <section class="import-section">
+            <h2>📥 Importar Clientes desde CSV</h2>
+            <p class="import-desc">Carga tus clientes históricos desde un archivo CSV. Evita ingresarlos uno por uno.</p>
+            
+            <div class="import-actions">
+                <button type="button" onclick="descargarPlantillaCSV()" class="btn-secondary">
+                    📄 Descargar Plantilla CSV
+                </button>
+                <button type="button" onclick="abrirImportacion()" class="btn-primary import-btn">
+                    📥 Importar Clientes
+                </button>
+            </div>
+
+            <div class="import-info">
+                <p><strong>Formato esperado:</strong></p>
+                <code>nombre,telefono,fecha_atencion</code>
+                <code>María Pérez,912345678,15/07/2026</code>
+                <small>Formatos de fecha aceptados: DD/MM/AAAA o AAAA-MM-DD</small>
+            </div>
+
+            <input type="file" id="importFile" accept=".csv" style="display:none">
+
+            <div id="importResultados" class="import-resultados" style="display:none;">
+                <!-- Resultados generados por JavaScript -->
+            </div>
+        </section>
+
+    
+
+
+
         <!-- FOOTER -->
         <footer>
             <p>Desarrollado por <strong>Negocio Inteligente</strong> © 2026</p>
