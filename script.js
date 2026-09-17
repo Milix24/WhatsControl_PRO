@@ -56,7 +56,7 @@ function agregarCliente(nombre, telefono, estado) {
     const nuevoCliente = {
         id: generarId(),
         nombre: nombre.trim(),
-        telefono: telefono.trim(),
+        telefono: telNormalizado,
         estado: estado || 'Nueva consulta',
         fechaCreacion: new Date().toISOString().split('T')[0],
         fechaAtencion: estado === 'Atendido' ? new Date().toISOString().split('T')[0] : null,
