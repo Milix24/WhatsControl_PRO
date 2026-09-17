@@ -385,7 +385,6 @@ function buscarClienteEspecifico(nombre) {
 
 
 
-
 // ---------- RECORDAR CLIENTE (WhatsApp) ----------
 function recordarCliente(clienteId) {
     const cliente = clientes.find(c => c.id === clienteId);
@@ -415,11 +414,18 @@ function recordarCliente(clienteId) {
         .replace(/{negocio}/g, config.nombre || 'la estética')
         .replace(/{dias}/g, diasTranscurridos);
     
-    const mensajeCodificado = encodeURIComponent(mensaje);
-    const numero = cliente.telefono.replace(/[^0-9]/g, '');
-    const url = `https://wa.me/56${numero}?text=${mensajeCodificado}`;
+            const mensajeCodificado = encodeURIComponent(mensaje);
+    const numeroNormalizado = normalizarTelefono(cliente.telefono);
+    
+    if (!numeroNormalizado) {
+        alert('❌ El teléfono del cliente no es válido para WhatsApp.');
+        return;
+    }
+    
+    const url = `https://wa.me/${numeroNormalizado}?text=${mensajeCodificado}`;
     
     window.open(url, '_blank');
+    
 }
 
 // ---------- EVENTOS ----------
