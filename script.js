@@ -48,6 +48,11 @@ function generarId() {
 }
 
 function agregarCliente(nombre, telefono, estado) {
+    const telNormalizado = normalizarTelefono(telefono);
+    if (!telNormalizado) {
+        alert('❌ El teléfono ingresado no es válido. Usa formato chileno (Ej: 912345678).');
+        return null;
+    }
     const nuevoCliente = {
         id: generarId(),
         nombre: nombre.trim(),
