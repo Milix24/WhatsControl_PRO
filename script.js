@@ -423,6 +423,7 @@ function recordarCliente(clienteId) {
 }
 
 // ---------- EVENTOS ----------
+
 document.getElementById('clienteForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const nombre = document.getElementById('nombre').value.trim();
@@ -438,6 +439,11 @@ document.getElementById('clienteForm').addEventListener('submit', (e) => {
     document.getElementById('clienteForm').reset();
     document.getElementById('estadoInicial').value = 'Nueva consulta';
 });
+
+// Evento para importar CSV
+document.getElementById('importFile').addEventListener('change', importarClientesCSV);
+
+
 
 // ---------- FUNCIONES ADICIONALES ----------
 function exportarReporte() {
