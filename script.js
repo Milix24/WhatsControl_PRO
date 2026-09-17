@@ -1048,3 +1048,7 @@ window.actualizarInfoBackup = actualizarInfoBackup;
 window.buscarClienteEspecifico = buscarClienteEspecifico;
 window.abrirConfiguracion = abrirConfiguracion;
 window.cerrarConfiguracion = cerrarConfiguracion;
+window.abrirImportacion = abrirImportacion;
+window.descargarPlantillaCSV = descargarPlantillaCSV;
+window.importarClientesCSV = importarClientesCSV;
+window.normalizarTelefono = normalizarTelefono;
