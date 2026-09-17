@@ -754,14 +754,21 @@ function descargarPlantillaCSV() {
 
 
 function parsearCSV(texto) {
+    // Detectar separador automáticamente: ; o ,
+    const primeraLinea = texto.split(/\r?\n/)[0] || '';
+    const separador = primeraLinea.includes(';') ? ';' : ',';
+    
     const lineas = texto.split(/\r?\n/).filter(linea => linea.trim() !== '');
     if (lineas.length < 2) return { encabezados: [], filas: [] };
     
-    const encabezados = lineas[0].split(',').map(h => h.trim().toLowerCase());
+    // Limpiar BOM si existe
+    const limpiarBOM = (str) => str.replace(/^\uFEFF/, '');
+    
+    const encabezados = limpiarBOM(lineas[0]).split(separador).map(h => h.trim().toLowerCase());
     const filas = [];
     
     for (let i = 1; i < lineas.length; i++) {
-        const valores = lineas[i].split(',').map(v => v.trim());
+        const valores = limpiarBOM(lineas[i]).split(separador).map(v => v.trim());
         const fila = {};
         encabezados.forEach((enc, idx) => {
             fila[enc] = valores[idx] || '';
@@ -771,6 +778,7 @@ function parsearCSV(texto) {
     
     return { encabezados, filas };
 }
+
 
 function parsearFecha(fechaStr) {
     if (!fechaStr) return null;
