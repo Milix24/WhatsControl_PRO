@@ -732,11 +732,15 @@ function abrirImportacion() {
 }
 
 function descargarPlantillaCSV() {
+    // Usar punto y coma (;) como separador y BOM para UTF-8
+    // Esto hace que Excel (en español/latino) lo abra correctamente
+    const BOM = '\uFEFF';
     const contenido = 
-        'nombre,telefono,fecha_atencion\n' +
-        'María Pérez,912345678,15/07/2026\n' +
-        'Carolina Soto,987654321,02/06/2026\n' +
-        'Andrea Díaz,934567890,10/08/2026\n';
+        BOM +
+        'nombre;telefono;fecha_atencion\n' +
+        'María Pérez;912345678;15/07/2026\n' +
+        'Carolina Soto;987654321;02/06/2026\n' +
+        'Andrea Díaz;934567890;10/08/2026\n';
     
     const blob = new Blob([contenido], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
@@ -747,6 +751,7 @@ function descargarPlantillaCSV() {
     
     mostrarToast('📄 Plantilla descargada correctamente');
 }
+
 
 function parsearCSV(texto) {
     const lineas = texto.split(/\r?\n/).filter(linea => linea.trim() !== '');
