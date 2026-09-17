@@ -325,8 +325,6 @@ function renderizarClientes(lista = null) {
 
 
 
-
-
 // ---------- FILTROS ----------
 function filtrar(tipo) {
     filtroActual = tipo;
@@ -703,6 +701,244 @@ function actualizarInfoBackup() {
         container.classList.remove('visible');
     }
 }
+
+
+// ---------- IMPORTAR CLIENTES DESDE CSV ----------
+function abrirImportacion() {
+    const input = document.getElementById('importFile');
+    if (!input) {
+        alert('⚠️ Error: No se encontró el selector de archivos.');
+        return;
+    }
+    input.value = '';
+    input.click();
+}
+
+function descargarPlantillaCSV() {
+    const contenido = 
+        'nombre,telefono,fecha_atencion\n' +
+        'María Pérez,912345678,15/07/2026\n' +
+        'Carolina Soto,987654321,02/06/2026\n' +
+        'Andrea Díaz,934567890,10/08/2026\n';
+    
+    const blob = new Blob([contenido], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'plantilla-clientes.csv';
+    link.click();
+    URL.revokeObjectURL(link.href);
+    
+    mostrarToast('📄 Plantilla descargada correctamente');
+}
+
+function parsearCSV(texto) {
+    const lineas = texto.split(/\r?\n/).filter(linea => linea.trim() !== '');
+    if (lineas.length < 2) return { encabezados: [], filas: [] };
+    
+    const encabezados = lineas[0].split(',').map(h => h.trim().toLowerCase());
+    const filas = [];
+    
+    for (let i = 1; i < lineas.length; i++) {
+        const valores = lineas[i].split(',').map(v => v.trim());
+        const fila = {};
+        encabezados.forEach((enc, idx) => {
+            fila[enc] = valores[idx] || '';
+        });
+        filas.push({ linea: i + 1, datos: fila });
+    }
+    
+    return { encabezados, filas };
+}
+
+function parsearFecha(fechaStr) {
+    if (!fechaStr) return null;
+    
+    // Formato DD/MM/AAAA
+    if (fechaStr.includes('/')) {
+        const partes = fechaStr.split('/');
+        if (partes.length === 3) {
+            const dia = parseInt(partes[0]);
+            const mes = parseInt(partes[1]) - 1;
+            const anio = parseInt(partes[2]);
+            if (!isNaN(dia) && !isNaN(mes) && !isNaN(anio)) {
+                const fecha = new Date(anio, mes, dia);
+                if (!isNaN(fecha.getTime())) {
+                    return fecha.toISOString().split('T')[0];
+                }
+            }
+        }
+    }
+    
+    // Formato AAAA-MM-DD
+    if (fechaStr.includes('-')) {
+        const fecha = new Date(fechaStr);
+        if (!isNaN(fecha.getTime())) {
+            return fecha.toISOString().split('T')[0];
+        }
+    }
+    
+    return null;
+}
+
+function importarClientesCSV(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const texto = e.target.result;
+        const { encabezados, filas } = parsearCSV(texto);
+        
+        // Validar encabezados
+        const requeridos = ['nombre', 'telefono', 'fecha_atencion'];
+        const faltantes = requeridos.filter(r => !encabezados.includes(r));
+        
+        if (faltantes.length > 0) {
+            alert(`❌ El CSV no tiene las columnas requeridas: ${faltantes.join(', ')}`);
+            return;
+        }
+        
+        // Procesar filas
+        const importados = [];
+        const omitidos = [];
+        const errores = [];
+        
+        filas.forEach(fila => {
+            const { nombre, telefono, fecha_atencion } = fila.datos;
+            
+            // Validar nombre
+            if (!nombre || nombre.trim() === '') {
+                errores.push(`Línea ${fila.linea}: falta el nombre`);
+                return;
+            }
+            
+            // Validar teléfono
+            const telNormalizado = normalizarTelefono(telefono);
+            if (!telNormalizado) {
+                errores.push(`Línea ${fila.linea}: teléfono inválido (${telefono})`);
+                return;
+            }
+            
+            // Validar fecha
+            const fechaISO = parsearFecha(fecha_atencion);
+            if (!fechaISO) {
+                errores.push(`Línea ${fila.linea}: fecha inválida (${fecha_atencion})`);
+                return;
+            }
+            
+            // Verificar duplicados por teléfono
+            const duplicado = clientes.find(c => 
+                normalizarTelefono(c.telefono) === telNormalizado
+            );
+            
+            if (duplicado) {
+                omitidos.push(`Línea ${fila.linea}: ${nombre} ya existe (${telefono})`);
+                return;
+            }
+            
+            // Agregar cliente
+            const nuevoCliente = {
+                id: generarId(),
+                nombre: nombre.trim(),
+                telefono: telNormalizado,
+                estado: 'Atendido',
+                fechaCreacion: fechaISO,
+                fechaAtencion: fechaISO,
+                ultimoContacto: fechaISO
+            };
+            
+            clientes.unshift(nuevoCliente);
+            importados.push(nombre.trim());
+        });
+        
+        // Guardar y refrescar
+        refrescarSistema();
+        
+        // Mostrar resultados
+        mostrarResultadosImportacion(importados.length, omitidos.length, errores, omitidos, errores);
+    };
+    
+    reader.readAsText(file);
+}
+
+function mostrarResultadosImportacion(importados, omitidosCount, erroresCount, listaOmitidos, listaErrores) {
+    const container = document.getElementById('importResultados');
+    if (!container) return;
+    
+    let clase = 'exito';
+    if (erroresCount > 0) clase = 'advertencia';
+    if (importados === 0) clase = 'error';
+    
+    let html = `
+        <h3>📊 Resultado de la Importación</h3>
+        <div class="resumen">
+            <div class="resumen-item">
+                <span class="num">${importados}</span>
+                <span class="lbl">✅ Importados</span>
+            </div>
+            <div class="resumen-item">
+                <span class="num">${omitidosCount}</span>
+                <span class="lbl">⏭️ Omitidos</span>
+            </div>
+            <div class="resumen-item">
+                <span class="num">${erroresCount}</span>
+                <span class="lbl">❌ Errores</span>
+            </div>
+        </div>
+    `;
+    
+    if (listaErrores.length > 0) {
+        html += `
+            <p style="margin: 10px 0 6px; font-weight:600; color:#991B1B;">Errores encontrados:</p>
+            <ul class="errores-lista">
+                ${listaErrores.map(e => `<li>${e}</li>`).join('')}
+            </ul>
+        `;
+    }
+    
+    if (listaOmitidos.length > 0) {
+        html += `
+            <p style="margin: 10px 0 6px; font-weight:600; color:#92400E;">Duplicados omitidos:</p>
+            <ul class="errores-lista">
+                ${listaOmitidos.map(o => `<li style="background:#FFFBEB;border-left-color:#F59E0B;">${o}</li>`).join('')}
+            </ul>
+        `;
+    }
+    
+    container.innerHTML = html;
+    container.className = `import-resultados ${clase}`;
+    container.style.display = 'block';
+    container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    
+    mostrarToast(`✅ Importación completa: ${importados} clientes`);
+}
+
+// ---------- NORMALIZAR TELÉFONO (Chile) ----------
+function normalizarTelefono(telefono) {
+    if (!telefono) return null;
+    
+    // Eliminar espacios, guiones, paréntesis y puntos
+    let limpio = String(telefono).replace(/[\s\-\(\)\.]/g, '');
+    
+    // Eliminar el signo +
+    limpio = limpio.replace(/\+/g, '');
+    
+    // Eliminar el 56 si está al inicio
+    if (limpio.startsWith('56')) {
+        limpio = limpio.substring(2);
+    }
+    
+    // Ahora debe quedar un número de 9 dígitos que empieza con 9
+    if (!/^9\d{8}$/.test(limpio)) {
+        return null;
+    }
+    
+    // Devolver con 56 al inicio
+    return '56' + limpio;
+}
+
+
+
 
 
 function restaurarBackup() {
