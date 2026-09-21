@@ -43,6 +43,25 @@ function guardarClientes() {
 }
 
 
+// ---------- CORREGIR CARACTERES MAL CODIFICADOS ----------
+function corregirTexto(texto) {
+    if (!texto) return texto;
+    return String(texto)
+        .replace(/Ã¡/g, 'á')
+        .replace(/Ã©/g, 'é')
+        .replace(/Ã­/g, 'í')
+        .replace(/Ã³/g, 'ó')
+        .replace(/Ãº/g, 'ú')
+        .replace(/Ã±/g, 'ñ')
+        .replace(/Ã‘/g, 'Ñ')
+        .replace(/Ã/g, 'í')
+        .replace(/Â¿/g, '¿')
+        .replace(/Â¡/g, '¡')
+        .trim();
+}
+
+
+
 // ---------- REFRESCAR SISTEMA ----------
 function refrescarSistema() {
     guardarClientes();
