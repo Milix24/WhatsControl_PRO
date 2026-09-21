@@ -197,11 +197,18 @@
             </div>
 
             <div class="import-info">
-            <p><strong>Formato esperado (separador punto y coma):</strong></p>
-            <code>nombre;telefono;fecha_atencion</code>
-            <code>María Pérez;912345678;15/07/2026</code>
-            <small>Formatos de fecha aceptados: DD/MM/AAAA o AAAA-MM-DD</small>
-            </div>
+    <p><strong>📋 Cómo preparar tu archivo (desde Excel):</strong></p>
+    <ol style="margin: 8px 0; padding-left: 20px; font-size: 0.85rem; color: #555;">
+        <li>Abre tu Excel con los clientes</li>
+        <li>Debe tener 3 columnas: <code>nombre</code>, <code>telefono</code>, <code>fecha_atencion</code></li>
+        <li>Ve a <strong>Archivo → Guardar como</strong> y elige <strong>"CSV UTF-8 (delimitado por comas)"</strong></li>
+        <li>Sube ese archivo aquí</li>
+    </ol>
+    <p><strong>Formato esperado:</strong></p>
+    <code>nombre;telefono;fecha_atencion</code>
+    <code>María Pérez;912345678;15/07/2026</code>
+    <small>📅 Formatos de fecha: DD/MM/AAAA o AAAA-MM-DD</small>
+</div>
 
             <input type="file" id="importFile" accept=".csv" style="display:none">
 

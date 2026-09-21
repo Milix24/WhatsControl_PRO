@@ -42,6 +42,17 @@ function guardarClientes() {
     localStorage.setItem('negocioInteligenteClientes', JSON.stringify(clientes));
 }
 
+
+// ---------- REFRESCAR SISTEMA ----------
+function refrescarSistema() {
+    guardarClientes();
+    renderizarClientes();
+    actualizarDashboard();
+    actualizarEstadisticas();
+    actualizarInfoBackup();
+}
+
+
 // ---------- FUNCIONES DE CLIENTES ----------
 function generarId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
@@ -754,6 +765,25 @@ function descargarPlantillaCSV() {
 
 
 function parsearCSV(texto) {
+
+// ---------- CORREGIR CARACTERES MAL CODIFICADOS ----------
+function corregirTexto(texto) {
+    if (!texto) return texto;
+    return texto
+        .replace(/Ã¡/g, 'á')
+        .replace(/Ã©/g, 'é')
+        .replace(/Ã­/g, 'í')
+        .replace(/Ã³/g, 'ó')
+        .replace(/Ãº/g, 'ú')
+        .replace(/Ã±/g, 'ñ')
+        .replace(/Ã/g, 'í')
+        .replace(/Â¿/g, '¿')
+        .replace(/Â¡/g, '¡')
+        .trim();
+}
+
+
+
     // Detectar separador automáticamente: ; o ,
     const primeraLinea = texto.split(/\r?\n/)[0] || '';
     const separador = primeraLinea.includes(';') ? ';' : ',';
@@ -835,9 +865,10 @@ function importarClientesCSV(event) {
         
         filas.forEach(fila => {
             const { nombre, telefono, fecha_atencion } = fila.datos;
+            const nombreCorregido = corregirTexto(nombre);
             
             // Validar nombre
-            if (!nombre || nombre.trim() === '') {
+            if (!nombreCorregido || nombreCorregido === '') {
                 errores.push(`Línea ${fila.linea}: falta el nombre`);
                 return;
             }
@@ -869,7 +900,7 @@ function importarClientesCSV(event) {
             // Agregar cliente
             const nuevoCliente = {
                 id: generarId(),
-                nombre: nombre.trim(),
+                nombre: nombreCorregido,
                 telefono: telNormalizado,
                 estado: 'Atendido',
                 fechaCreacion: fechaISO,
@@ -878,7 +909,7 @@ function importarClientesCSV(event) {
             };
             
             clientes.unshift(nuevoCliente);
-            importados.push(nombre.trim());
+            importados.push(nombreCorregido);
         });
         
         // Guardar y refrescar
