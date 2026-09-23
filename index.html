@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Negocio Inteligente Express: sistema para estéticas que organiza consultas, recupera clientes y automatiza el seguimiento por WhatsApp.">
+    <meta name="description" content="Negocio Inteligente Express: sistema para pequeños negocios que organiza consultas, recupera clientes y automatiza el seguimiento por WhatsApp.">
     <title>Negocio Inteligente Express</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -45,7 +45,7 @@
             </div>
             <div class="metric-card recuperables" id="metricRecuperables">
                 <span class="metric-value" id="recuperables">0</span>
-                <span class="metric-label">🔄 Clientes por Recuperar</span>
+                <span class="metric-label">🔄 Oportunidades Pendientes</span>
                 <span class="metric-sub">Esta semana</span>
             </div>
         </section>
@@ -68,8 +68,8 @@
             </div>
             <div class="config-grid">
                                 <div class="config-group">
-                    <label>📛 Nombre de la estética</label>
-                    <input type="text" id="configNombre" placeholder="Ej: Estética Bella">
+                    <label>📛 Nombre del negocio</label>
+                    <input type="text" id="configNombre" placeholder="Ej: Mi Negocio">
                 </div>
                 <div class="config-group">
                     <label>📱 WhatsApp</label>
@@ -77,7 +77,7 @@
                 </div>
                 <div class="config-group">
                     <label>📧 Correo electrónico</label>
-                    <input type="email" id="configCorreo" placeholder="Ej: estetica@gmail.com">
+                    <input type="email" id="configCorreo" placeholder="Ej: minegocio@gmail.com">
                 </div>
                 <div class="config-group">
                     <label>📍 Dirección</label>
@@ -94,7 +94,7 @@
                 <div class="config-group full-width">
                     <label>✏️ Mensaje personalizado</label>
                     <textarea id="configMensaje" rows="4" placeholder="Escribe el mensaje que se enviará a los clientes..."></textarea>
-                    <small>Usa <strong>{nombre}</strong> para el nombre del cliente y <strong>{negocio}</strong> para el nombre de tu estética.</small>
+                    <small>Usa <strong>{nombre}</strong> para el nombre del cliente y <strong>{negocio}</strong> para el nombre de tu negocio.</small>
                 </div>
                 <button onclick="guardarConfiguracion()" class="btn-primary config-save">💾 Guardar Configuración</button>
             </div>
@@ -130,7 +130,7 @@
                 <button type="button" onclick="filtrar('todos')" class="filtro-btn active">📋 Todos</button>
                 <button type="button" onclick="filtrar('nuevos')" class="filtro-btn">🆕 Nuevos</button>
                 <button type="button" onclick="filtrar('atendidos')" class="filtro-btn">✅ Atendidos</button>
-                <button type="button" onclick="filtrar('recuperables')" class="filtro-btn btn-warning">🔄 Clientes por Recuperar</button>
+                <button type="button" onclick="filtrar('recuperables')" class="filtro-btn btn-warning">🔄 Oportunidades Pendientes</button>
             </div>
             <div class="buscador">
     <label for="buscador" class="sr-only">Buscar cliente</label>
@@ -179,8 +179,6 @@
         <input type="file" id="backupFile" accept=".json" style="display:none">
 
 
-
-        <!-- IMPORTAR CLIENTES -->
 
         <!-- IMPORTAR CLIENTES -->
         <section class="import-section">
