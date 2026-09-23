@@ -242,9 +242,9 @@ function actualizarEstadisticas() {
             <span class="estadistica-detalle">${clienteMasAntiguo ? maxDias + ' días sin venir' : 'Sin datos'}</span>
             ${clienteMasAntiguo ? `<button onclick="buscarClienteEspecifico('${clienteMasAntiguo.nombre}')" class="estadistica-accion">Ver ficha →</button>` : ''}
         </div>
-        <div class="estadistica-card">
+                <div class="estadistica-card">
             <span class="estadistica-valor">${recuperables}</span>
-            <span class="estadistica-label">📋 Clientes por Recuperar</span>
+            <span class="estadistica-label">📋 Oportunidades Pendientes</span>
             <span class="estadistica-detalle">${recuperables > 0 ? 'Listos para contactar' : 'Todos al día ✅'}</span>
             ${recuperables > 0 ? `<button onclick="filtrar('recuperables')" class="estadistica-accion">Ver lista →</button>` : ''}
         </div>
@@ -370,7 +370,7 @@ function filtrar(tipo) {
         if (btn.textContent.includes('Todos') && tipo === 'todos') btn.classList.add('active');
         if (btn.textContent.includes('Nuevos') && tipo === 'nuevos') btn.classList.add('active');
         if (btn.textContent.includes('Atendidos') && tipo === 'atendidos') btn.classList.add('active');
-        if (btn.textContent.includes('Clientes por Recuperar') && tipo === 'recuperables') btn.classList.add('active');
+        if (btn.textContent.includes('Oportunidades Pendientes') && tipo === 'recuperables') btn.classList.add('active');
     });
     
     switch(tipo) {
@@ -436,9 +436,9 @@ function recordarCliente(clienteId) {
     const diasTranscurridos = cliente.fechaAtencion ? calcularDiferenciaDias(cliente.fechaAtencion) : 0;
     
     // Usar mensaje personalizado o el predeterminado
-    let mensaje = config.mensajePersonalizado || 
+        let mensaje = config.mensajePersonalizado || 
         `Hola ${cliente.nombre} 😊\n\n` +
-        `Ya pasaron ${dias} días desde tu última visita a la estética.\n` +
+        `Ya pasaron ${dias} días desde tu última visita.\n` +
         `Tenemos horas disponibles esta semana.\n` +
         `¿Te gustaría reservar nuevamente?\n\n` +
         `¡Te esperamos! ✨`;
@@ -446,7 +446,7 @@ function recordarCliente(clienteId) {
    // Reemplazar variables
     mensaje = mensaje
         .replace(/{nombre}/g, cliente.nombre)
-        .replace(/{negocio}/g, config.nombre || 'la estética')
+        .replace(/{negocio}/g, config.nombre || 'el negocio')
         .replace(/{dias}/g, diasTranscurridos);
     
             const mensajeCodificado = encodeURIComponent(mensaje);
@@ -493,7 +493,7 @@ function exportarReporte() {
     texto += `Total: ${clientes.length}\n`;
     texto += `Nuevos: ${clientes.filter(c => c.estado === 'Nueva consulta' || c.estado === 'Nuevo').length}\n`;
     texto += `Atendidos: ${clientes.filter(c => c.estado === 'Atendido').length}\n`;
-    texto += `Clientes por Recuperar: ${clientes.filter(esRecuperable).length}\n\n`;
+    texto += `Oportunidades Pendientes: ${clientes.filter(esRecuperable).length}\n\n`;
     texto += '='.repeat(40) + '\n\n';
     
     clientes.forEach(c => {
@@ -552,7 +552,7 @@ function enviarInformeCorreo() {
     texto += `📋 Total: ${clientes.length}\n`;
     texto += `🆕 Nuevos: ${clientes.filter(c => c.estado === 'Nueva consulta' || c.estado === 'Nuevo').length}\n`;
     texto += `✅ Atendidos: ${clientes.filter(c => c.estado === 'Atendido').length}\n`;
-    texto += `🔄 Clientes por Recuperar: ${clientes.filter(esRecuperable).length}\n\n`;
+    texto += `🔄 Oportunidades Pendientes: ${clientes.filter(esRecuperable).length}\n\n`;
     texto += '='.repeat(40) + '\n\n';
     texto += '📋 LISTA DE CLIENTES\n';
     texto += '-'.repeat(40) + '\n\n';
@@ -608,8 +608,7 @@ function reiniciarCiclo() {
     if (confirm('⚠️ ¿Eliminar TODOS los clientes? Esta acción no se puede deshacer.')) {
         if (confirm('¿Estás completamente seguro?')) {
             clientes = [];
-            clientes = [];
-        refrescarSistema();  // <-- AGREGAR ESTA LÍNEA
+            refrescarSistema();
             document.getElementById('buscador').value = '';
         }
     }
@@ -671,8 +670,8 @@ function guardarConfiguracion() {
     const mensajePersonalizado = document.getElementById('configMensaje').value.trim();
     
     if (!nombre) {
-        alert('⚠️ Por favor ingresa el nombre de tu estética.');
-        return;
+    alert('⚠️ Por favor ingresa el nombre de tu negocio.');
+    return;
     }
     
     const config = {
@@ -784,25 +783,6 @@ function descargarPlantillaCSV() {
 
 
 function parsearCSV(texto) {
-
-// ---------- CORREGIR CARACTERES MAL CODIFICADOS ----------
-function corregirTexto(texto) {
-    if (!texto) return texto;
-    return texto
-        .replace(/Ã¡/g, 'á')
-        .replace(/Ã©/g, 'é')
-        .replace(/Ã­/g, 'í')
-        .replace(/Ã³/g, 'ó')
-        .replace(/Ãº/g, 'ú')
-        .replace(/Ã±/g, 'ñ')
-        .replace(/Ã/g, 'í')
-        .replace(/Â¿/g, '¿')
-        .replace(/Â¡/g, '¡')
-        .trim();
-}
-
-
-
     // Detectar separador automáticamente: ; o ,
     const primeraLinea = texto.split(/\r?\n/)[0] || '';
     const separador = primeraLinea.includes(';') ? ';' : ',';
@@ -827,7 +807,6 @@ function corregirTexto(texto) {
     
     return { encabezados, filas };
 }
-
 
 function parsearFecha(fechaStr) {
     if (!fechaStr) return null;
