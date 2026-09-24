@@ -1122,6 +1122,7 @@ window.recordarCliente = recordarCliente;
 window.cambiarEstado = cambiarEstado;
 window.eliminarCliente = eliminarCliente;
 window.exportarReporte = exportarReporte;
+window.exportarExcel = exportarExcel;
 window.reiniciarCiclo = reiniciarCiclo;
 window.cargarConfiguracion = cargarConfiguracion;
 window.guardarConfiguracion = guardarConfiguracion;
