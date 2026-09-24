@@ -517,6 +517,49 @@ function exportarReporte() {
 }
 
 
+// ---------- EXPORTAR A EXCEL (CSV real) ----------
+function exportarExcel() {
+    if (clientes.length === 0) {
+        alert('📭 No hay clientes para exportar.');
+        return;
+    }
+    
+    // Crear CSV con columnas separadas por ; (Excel latino)
+    const BOM = '\uFEFF';
+    let csv = BOM;
+    csv += 'Nombre;Teléfono;Estado;Última Atención;Días;Prioridad;Recuperable\n';
+    
+    clientes.forEach(c => {
+        const dias = c.fechaAtencion ? calcularDiferenciaDias(c.fechaAtencion) : '';
+        const recuperable = esRecuperable(c) ? 'Sí' : 'No';
+        let prioridad = '';
+        
+        if (c.estado === 'Atendido' && c.fechaAtencion && dias !== '') {
+            if (dias < 30) prioridad = 'Baja';
+            else if (dias < 60) prioridad = 'Media';
+            else if (dias < 90) prioridad = 'Alta';
+            else prioridad = 'Crítica';
+        }
+        
+        // Limpiar valores que puedan tener ; o saltos de línea
+        const nombreLimpio = c.nombre.replace(/;/g, ',').replace(/\n/g, ' ');
+        const estadoLimpio = c.estado.replace(/;/g, ',').replace(/\n/g, ' ');
+        
+        csv += `"${nombreLimpio}";"${c.telefono}";"${estadoLimpio}";"${c.fechaAtencion || ''}";"${dias}";"${prioridad}";"${recuperable}"\n`;
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `datos-clientes-${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+    
+    mostrarToast('📊 Excel descargado correctamente');
+}
+
+
+
 // ---------- ENVIAR INFORME POR CORREO ----------
 function enviarInformeCorreo() {
     // Verificar si hay clientes
